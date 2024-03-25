@@ -31,7 +31,6 @@ const options = {
   },
 };
 
-
 function convertMs(ms) {
   // Number of milliseconds per unit of time
   const second = 1000;
@@ -55,8 +54,6 @@ function convertMs(ms) {
 startBtn.disabled = true;
 
 flatpickr("#datetime-picker", options);
-
-
 
 startBtn.addEventListener('click', event => {
   const intervalId = setInterval(() => {
