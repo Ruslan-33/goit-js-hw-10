@@ -1,15 +1,14 @@
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 
-import flatpickr from "flatpickr";
-import "flatpickr/dist/flatpickr.min.css";
-import iziToast from "izitoast";
-import "izitoast/dist/css/iziToast.min.css";
+let userSelectedDate;
 
-const selector = document.querySelector("#datetime-picker");
-
-const dataStart = document.querySelector("[data-start]");
-
-let userSelectedDate = 0;
+const startBtn = document.querySelector('button');
+const showTime = document.querySelectorAll('.value');
+const inputTime = document.querySelector("#datetime-picker");
 
 const options = {
   enableTime: true,
@@ -18,41 +17,19 @@ const options = {
   minuteIncrement: 1,
   onClose(selectedDates) {
     userSelectedDate = selectedDates[0];
-    const currentDate = new Date();
-    if (userSelectedDate < currentDate) {
-      iziToast.warning({
-        color: "red",
-        message: "Please choose a date in the future.",
-        position: "topRight"
+   const timeValid = userSelectedDate - new Date();
+    if (timeValid < 1) {
+      iziToast.error({ 
+        position: 'topCenter',
+        message: `Please choose a date in the future`
       });
-      dataStart.setAttribute("disabled");
+      startBtn.disabled = true; 
     } else {
-      dataStart.removeAttribute("disabled");
+      startBtn.disabled = false;  
+      
     }
-  }
+  },
 };
-flatpickr(selector, options);
-
-const timer = document.querySelector(".timer");
-
-dataStart.addEventListener("click", startTimer);
-
-function startTimer() {
-  let msDifference = userSelectedDate - new Date();
-  const intervalId = setInterval(() => {
-    let { days, hours, minutes, seconds } = convertMs(msDifference);
-    document.querySelector('[data-days]').textContent = addZeroOnStart(days);
-    document.querySelector('[data-hours]').textContent = addZeroOnStart(hours);
-    document.querySelector('[data-minutes]').textContent = addZeroOnStart(minutes);
-    document.querySelector('[data-seconds]').textContent = addZeroOnStart(seconds);
-    if (days === 0 && hours === 0 && minutes === 0 && seconds === 0) {
-      clearInterval(intervalId);
-      dataStart.removeAttribute("disabled");
-      selector.removeAttribute("disabled");
-    }
-    msDifference -= 1000;
-  }, 1000);
-}
 
 
 function convertMs(ms) {
@@ -72,10 +49,34 @@ function convertMs(ms) {
   const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
   return { days, hours, minutes, seconds };
+
 }
 
-function addZeroOnStart(value) {
-  return value < 10 ? "0" + value : value;
-}
+startBtn.disabled = true;
 
-// 
+flatpickr("#datetime-picker", options);
+
+
+
+startBtn.addEventListener('click', event => {
+  const intervalId = setInterval(() => {
+     
+    let timeInterval = userSelectedDate - new Date();
+  
+    if (timeInterval < 1) {
+
+      clearInterval(intervalId);
+      return;
+    }
+    startBtn.disabled = true;
+    inputTime.disabled = true;
+
+    const timer = convertMs(timeInterval);    
+
+    showTime[0].textContent = timer.days.toString().padStart(2, '0');
+    showTime[1].textContent= timer.hours.toString().padStart(2, '0');
+    showTime[2].textContent = timer.minutes.toString().padStart(2, '0');
+    showTime[3].textContent = timer.seconds.toString().padStart(2, '0');
+  }, 1000);
+  
+});

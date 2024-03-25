@@ -1,46 +1,37 @@
 import iziToast from "izitoast";
+// Додатковий імпорт стилів
 import "izitoast/dist/css/iziToast.min.css";
 
-const delayForm=document.querySelector(".form");
+const formEl = document.querySelector('.form');
 
-delayForm.addEventListener('submit', event => {
-  event.preventDefault();
-  const timer = event.currentTarget.elements.delay.value;
-  const radio = event.currentTarget.elements.state.value;
-
-  const promise = new Promise((resolve, reject) => {
-    setTimeout(() => {
-
-      console.log(timer, radio );
-      if (radio ==="fulfilled") {
-        resolve(
-  
-          );
-      } else {
-        reject(
+formEl.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const delay = event.currentTarget.elements.delay.value;
+    const btnRadio = event.currentTarget.elements.state.value;
     
-        );
-      }
-    }, timer);
-  });
-
-// Registering promise callbacks
-promise
-  .then(value => {
-    iziToast.success({  
-      color: 'green',
-      position: "topRight",
-      message: `✅ Fulfilled promise in ${timer}ms`
-  })
-  })
-  .catch(error => {
-    iziToast.error({ 
-      color: 'red',
-      position: "topRight",          
-      message: `❌ Rejected promise in ${timer}ms`
-  })
-  });
-
+    const promise = new Promise((resolve, reject) => {
+        setTimeout(() => {
+            if (btnRadio === 'fulfilled') {
+                resolve(delay);
+            } else {
+                reject(delay);
+            }
+        }, delay);
+    });
+    promise
+        .then(delay => {
+            iziToast.success({         
+                position: "topRight",
+                message: `✅ Fulfilled promise in ${delay}ms`
+            });
+        })
+        .catch(delay => {
+            iziToast.error({
+                position: "topRight",
+                message: `❌ Rejected promise in ${delay}ms`
+            });
+        });
+    
+    formEl.reset();
+    
 });
-
-

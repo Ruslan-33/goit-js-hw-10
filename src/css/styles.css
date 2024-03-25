@@ -71,7 +71,7 @@ legend {
 
 .btn {
   position: absolute;
-  background-color: #0de014;
+  background-color: #42d446c0;
   border-radius: 10px;
   box-shadow: 0px 0px 2px 2px rgb(0, 0, 0);
   padding: 10px
@@ -80,11 +80,11 @@ legend {
 .btn:focus {
   outline-color: transparent;
   outline-style: solid;
-  box-shadow: 0 0 0 4px #5a01a7;
+  box-shadow: 0 0 0 4px #0880a1;
 }
 
 .btn:active {
-  background-color: hsl(61, 100%, 50%);
+  background-color: hsl(120, 32%, 41%);
 }
 
 .form-snackbar button {
